@@ -14,8 +14,8 @@ from typing import List, Optional
 from telegram import (
     Bot, InlineKeyboardButton, InlineKeyboardMarkup,
     InputMediaDocument, InputMediaPhoto, InputMediaVideo,
-    ReplyMarkup,
 )
+from telegram._utils.types import ReplyMarkup
 from telegram.constants import ParseMode
 from telegram.error import TelegramError
 
