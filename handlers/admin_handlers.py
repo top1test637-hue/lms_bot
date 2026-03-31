@@ -170,7 +170,11 @@ class AdminHandlers:
     async def _handle_new_group_name(self, update, context, text):
         if not text:
             await update.message.reply_text("⚠️ الاسم لا يمكن أن يكون فارغاً."); return
-        cat_id   = context.user_data.get("new_group_cat", 0)
+        cat_id = context.user_data.get("new_group_cat", 0)
+        if not cat_id or not self.c.category_repo.get_by_id(cat_id):
+            await update.message.reply_text("❌ الفئة غير موجودة، ابدأ من جديد من إدارة المحتوى.")
+            context.user_data.pop("awaiting", None)
+            return
         group_id = self.c.group_repo.add(cat_id, text)
         context.user_data.update({"adding_to_group": group_id, "awaiting": "add_group_item"})
         await update.message.reply_text(
