@@ -99,6 +99,9 @@ class AdminHandlers:
         Handle messages when the admin is mid-flow (e.g. adding a category name).
         Reads ``context.user_data["awaiting"]`` to know what to do.
         """
+        if not update.effective_user or not update.message:
+            return
+
         user_id = update.effective_user.id
         if not self.c.auth_service.is_admin(user_id):
             return
@@ -153,6 +156,9 @@ class AdminHandlers:
         cat_id = context.user_data.pop("new_cont_cat", 0)
         name   = context.user_data.pop("new_cont_name", "محتوى")
         context.user_data.pop("awaiting", None)
+        if not cat_id or not self.c.category_repo.get_by_id(cat_id):
+            await msg.reply_text("❌ الفئة غير موجودة، ابدأ من جديد من إدارة المحتوى.")
+            return
         ctype, cdata = extract_content_from_message(msg)
         if not ctype:
             await msg.reply_text("❌ لم أتمكن من استخراج المحتوى."); return
