@@ -192,7 +192,7 @@ class ConversationHandlers:
     def build_broadcast_conv(self) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[MessageHandler(filters.Regex("^📣 إرسال رسالة جماعية$"), self._start_broadcast)],
-            per_message=False,
+            per_message=True,
             states={
                 ST_BROADCAST_MSG: [MessageHandler(
                     (filters.TEXT | filters.PHOTO | filters.VIDEO | filters.Document.ALL) & ~filters.COMMAND,
@@ -273,7 +273,6 @@ class ConversationHandlers:
     def build_add_channel_conv(self) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[CallbackQueryHandler(self._start_add_channel, pattern="^a_ach_0$")],
-            per_message=False,
             states={ST_ADD_CHANNEL: [MessageHandler(filters.TEXT & ~filters.COMMAND, self._receive_channel)]},
             fallbacks=[CommandHandler("cancel", self.cancel)],
             allow_reentry=True,
@@ -339,7 +338,6 @@ class ConversationHandlers:
     def build_owners_conv(self) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[CallbackQueryHandler(self._owner_panel_cb, pattern="^owner_(add|remove)$")],
-            per_message=False,
             states={
                 ST_ADD_OWNER_ID:    [MessageHandler(filters.TEXT & ~filters.COMMAND, self._receive_new_owner)],
                 ST_REMOVE_OWNER_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, self._receive_remove_owner)],
@@ -398,7 +396,6 @@ class ConversationHandlers:
     def build_vip_conv(self) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[CallbackQueryHandler(self._vip_panel_cb, pattern="^vip_(add|del)$")],
-            per_message=False,
             states={
                 ST_VIP_ADD: [MessageHandler(filters.TEXT & ~filters.COMMAND, self._receive_vip_add)],
                 ST_VIP_DEL: [MessageHandler(filters.TEXT & ~filters.COMMAND, self._receive_vip_del)],
